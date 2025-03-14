@@ -1,4 +1,4 @@
-const userModels = require("../models/user.model");
+const userModel = require("../models/user.model");
 const blacklisttokenModel = require("../models/blacklistToken.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,7 +7,7 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const user = await userModels.findOne({ email });
+    const user = await userModel.findOne({ email });
 
     if (user) {
       return res.status(400).json({ message: "User already exists" });
@@ -15,7 +15,7 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new userModels({
+    const newUser = new userModel({
       name,
       email,
       password: hashPassword,
@@ -59,8 +59,10 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    delete user._doc.password;
+
     res.cookie("token", token);
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ user, token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -80,6 +82,7 @@ const logout = async (req, res) => {
 
 const porfile = async (req, res) => {
   try {
+    delete req.user._doc.password;
     res.status(200).json(req.user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -90,6 +93,5 @@ module.exports = {
   register,
   login,
   logout,
-  porfile
+  porfile,
 };
-

@@ -5,8 +5,8 @@ const authMiddleWare = require("../middleware/authMiddleWare");
 
 route.post("/register", userController.register);
 route.post("/login", userController.login);
-route.post("/logout", userController.logout);
-route.get("/  porfile", authMiddleWare, userController.porfile
+route.get("/logout", userController.logout);
+route.get("/porfile", authMiddleWare, userController.porfile
 );
 
 module.exports = route;
