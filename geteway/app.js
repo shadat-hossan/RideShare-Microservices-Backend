@@ -7,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use("/user", expressProxy("http://localhost:3001"));
+app.use("/captain", expressProxy("http://localhost:3002"));
 
 app.listen(PORT, () => {
   console.log(`Geteway Server running on port http://localhost:${PORT}`);
